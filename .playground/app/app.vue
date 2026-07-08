@@ -1,5 +1,5 @@
 <template>
-  <DevLeadHunterStarterRoot :content="mockSiteContent" />
+  <PlumberAtelierRoot :content="mockSiteContent" />
 </template>
 
 <script lang="ts" setup>
