@@ -184,12 +184,24 @@ const atelierDefaults = {
 } as const
 
 /**
+ * Retourne le texte éditorial du contenu s'il est non vide, sinon le défaut de la template.
+ * @param value Texte éditorial issu de `SiteContent` (potentiellement absent).
+ * @param templateDefault Copie par défaut possédée par la template.
+ * @returns Le texte à afficher.
+ */
+function resolveEditorialText(value: string | undefined, templateDefault: string): string {
+  return typeof value === 'string' && value.trim().length > 0 ? value : templateDefault
+}
+
+/**
  * Construit le contenu de page entièrement typé à partir d'un `SiteContent`.
  *
  * Les champs VARIABLES (nom, téléphone, ville, sous-titre, à-propos, images, galerie, avis,
  * FAQ, horaires, services, email) proviennent de `content` ; les champs BOILERPLATE (badge
  * hero, repères de confiance, garanties de l'artisan, titres de sections, services par
- * défaut) proviennent des défauts de la template. Les services sont repris de `content`
+ * défaut) proviennent des défauts de la template. La copie ÉDITORIALE éditable par le client
+ * (badge hero, libellé CTA, repères de confiance, titres de sections) est reprise de `content`
+ * quand elle est non vide, sinon retombe sur les défauts. Les services sont repris de `content`
  * s'ils existent, sinon remplacés par les services éditoriaux par défaut afin que la
  * section reste complète. Les sections adossées à du contenu prospect (à-propos, galerie,
  * avis, FAQ, horaires) restent VIDES quand la clé est absente — la racine les masque.
@@ -242,6 +254,20 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
         }))
     : []
 
+  const trustItemsFromContent: Array<{ value: string; label: string }> = Array.isArray(
+    content.trustItems,
+  )
+    ? content.trustItems
+        .map((item): { value: string; label: string } => ({
+          value: item.value ?? '',
+          label: item.label ?? '',
+        }))
+        .filter((item): boolean => item.value.length > 0 || item.label.length > 0)
+    : []
+  const trustItems: Array<{ value: string; label: string }> = trustItemsFromContent.length
+    ? trustItemsFromContent
+    : atelierDefaults.trustItems
+
   const openingHours: Array<{ day: string; hours: string }> = Array.isArray(content.openingHours)
     ? content.openingHours
         .filter(
@@ -274,24 +300,24 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
     phone,
     city,
     hero: {
-      badge: atelierDefaults.heroBadge,
+      badge: resolveEditorialText(content.heroBadge, atelierDefaults.heroBadge),
       title: businessName,
       subtitle:
         content.subtitle && content.subtitle.length > 0
           ? content.subtitle
           : atelierDefaults.heroSubtitle,
       phone,
-      cta_label: atelierDefaults.heroCtaLabel,
+      cta_label: resolveEditorialText(content.ctaCallLabel, atelierDefaults.heroCtaLabel),
       image: content.heroImage ?? '',
     },
-    trustItems: atelierDefaults.trustItems,
+    trustItems,
     services: {
-      heading: atelierDefaults.servicesHeading,
+      heading: resolveEditorialText(content.servicesHeading, atelierDefaults.servicesHeading),
       subheading: atelierDefaults.servicesSubheading,
       items: services,
     },
     about: {
-      heading: atelierDefaults.aboutHeading,
+      heading: resolveEditorialText(content.aboutHeading, atelierDefaults.aboutHeading),
       text: content.about ?? '',
       image: content.aboutImage ?? '',
     },
@@ -300,22 +326,22 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
       items: atelierDefaults.whyUsItems,
     },
     gallery: {
-      heading: atelierDefaults.galleryHeading,
+      heading: resolveEditorialText(content.galleryHeading, atelierDefaults.galleryHeading),
       subheading: atelierDefaults.gallerySubheading,
       items: galleryItems,
     },
     reviews: {
-      heading: atelierDefaults.reviewsHeading,
+      heading: resolveEditorialText(content.reviewsHeading, atelierDefaults.reviewsHeading),
       subheading: atelierDefaults.reviewsSubheading,
       items: reviewItems,
     },
     faq: {
-      heading: atelierDefaults.faqHeading,
+      heading: resolveEditorialText(content.faqHeading, atelierDefaults.faqHeading),
       subheading: atelierDefaults.faqSubheading,
       items: faqItems,
     },
     contact: {
-      heading: atelierDefaults.contactHeading,
+      heading: resolveEditorialText(content.contactHeading, atelierDefaults.contactHeading),
       subheading: atelierDefaults.contactSubheading,
       email: content.email ?? '',
       phone,

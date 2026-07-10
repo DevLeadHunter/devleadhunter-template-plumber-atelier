@@ -17,6 +17,9 @@ export const mockSiteContent: SiteContent = {
   email: 'contact@plomberie-vasseur.fr',
   city: 'Nantes',
   area: 'Loire-Atlantique',
+  // Copie éditoriale éditée par le client dans son CMS (absente = défaut de la template).
+  heroBadge: 'Atelier de plomberie depuis 1992',
+  servicesHeading: 'Nos savoir-faire',
   about:
     "Artisan plombier installé à Nantes depuis plus de quinze ans, je prends en charge vos dépannages, installations et rénovations avec le même soin. Quand vous appelez, vous parlez directement à l'artisan qui viendra chez vous — pas à un standard. Diagnostic honnête, matériel de qualité et chantier laissé propre : c'est ma manière de travailler.",
   heroImage: 'https://picsum.photos/seed/atelier-hero/800/600',
