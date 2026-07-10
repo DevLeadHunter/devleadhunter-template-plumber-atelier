@@ -73,56 +73,80 @@
         </svg>
       </div>
 
-      <!-- Fiche d'intervention (carte spec) -->
-      <aside
-        class="hero-card reveal"
-        data-reveal
-        style="--d: 320ms">
-        <div class="card-corner card-corner-tl"></div>
-        <div class="card-corner card-corner-br"></div>
-        <p class="card-label">Fiche d'intervention</p>
-        <dl class="card-rows">
-          <div class="card-row">
-            <dt>Disponibilité</dt>
-            <dd>{{ hero.badge || 'Urgences 7j/7' }}</dd>
-          </div>
-          <div
-            v-if="city"
-            class="card-row">
-            <dt>Zone</dt>
-            <dd>{{ city }}</dd>
-          </div>
-          <div
+      <div class="hero-side">
+        <!-- Photo du prospect (uniquement si fournie) -->
+        <figure
+          v-if="hero.image"
+          class="hero-figure reveal"
+          data-reveal
+          style="--d: 240ms">
+          <div class="card-corner card-corner-tl"></div>
+          <div class="card-corner card-corner-br"></div>
+          <img
+            class="hero-img"
+            :src="hero.image"
+            :alt="heroImageAlt" />
+        </figure>
+
+        <!-- Fiche d'intervention (carte spec) -->
+        <aside
+          class="hero-card reveal"
+          data-reveal
+          style="--d: 320ms">
+          <div class="card-corner card-corner-tl"></div>
+          <div class="card-corner card-corner-br"></div>
+          <p class="card-label">Fiche d'intervention</p>
+          <dl class="card-rows">
+            <div class="card-row">
+              <dt>Disponibilité</dt>
+              <dd>{{ hero.badge || 'Urgences 7j/7' }}</dd>
+            </div>
+            <div
+              v-if="city"
+              class="card-row">
+              <dt>Zone</dt>
+              <dd>{{ city }}</dd>
+            </div>
+            <div
+              v-if="phone"
+              class="card-row">
+              <dt>Ligne directe</dt>
+              <dd>{{ phone }}</dd>
+            </div>
+            <div class="card-row">
+              <dt>Devis</dt>
+              <dd>Gratuit · sous 2h</dd>
+            </div>
+          </dl>
+          <a
             v-if="phone"
-            class="card-row">
-            <dt>Ligne directe</dt>
-            <dd>{{ phone }}</dd>
-          </div>
-          <div class="card-row">
-            <dt>Devis</dt>
-            <dd>Gratuit · sous 2h</dd>
-          </div>
-        </dl>
-        <a
-          v-if="phone"
-          :href="`tel:${phone}`"
-          class="card-call"
-          >Appeler l'atelier</a
-        >
-      </aside>
+            :href="`tel:${phone}`"
+            class="card-call"
+            >Appeler l'atelier</a
+          >
+        </aside>
+      </div>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { HeroBlock } from '~/types/plumber-atelier'
 
-defineProps<{
+const props = defineProps<{
   hero: HeroBlock
   businessName: string
   phone: string
   city: string
 }>()
+
+const heroImageAlt: ComputedRef<string> = computed((): string =>
+  props.city
+    ? `${props.businessName}, artisan plombier à ${props.city}`
+    : `${props.businessName}, artisan plombier`,
+)
 </script>
 
 <style scoped>
@@ -185,6 +209,25 @@ defineProps<{
 }
 .ruler-ticks line {
   stroke-width: 1;
+}
+
+/* Colonne latérale : photo (si fournie) + fiche d'intervention */
+.hero-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.hero-figure {
+  position: relative;
+  border: 1px solid var(--hair);
+  background: var(--paper-2);
+  padding: 0.5rem;
+}
+.hero-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
 }
 
 /* Fiche d'intervention */

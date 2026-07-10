@@ -30,75 +30,99 @@
           <span>Appeler maintenant</span>
         </a>
       </div>
-      <dl class="contact-meta">
+      <div class="contact-side">
+        <dl class="contact-meta">
+          <div
+            v-if="contact.email"
+            class="contact-metarow">
+            <svg
+              viewBox="0 0 24 24"
+              class="ico"
+              aria-hidden="true">
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2" />
+              <path d="m3 7 9 6 9-6" />
+            </svg>
+            <div>
+              <dt>Email</dt>
+              <dd>{{ contact.email }}</dd>
+            </div>
+          </div>
+          <div
+            v-if="city"
+            class="contact-metarow">
+            <svg
+              viewBox="0 0 24 24"
+              class="ico"
+              aria-hidden="true">
+              <path d="M12 21s7-5.5 7-11a7 7 0 0 0-14 0c0 5.5 7 11 7 11Z" />
+              <circle
+                cx="12"
+                cy="10"
+                r="2.5" />
+            </svg>
+            <div>
+              <dt>Zone d'intervention</dt>
+              <dd>{{ city }}</dd>
+            </div>
+          </div>
+          <div class="contact-metarow">
+            <svg
+              viewBox="0 0 24 24"
+              class="ico"
+              aria-hidden="true">
+              <circle
+                cx="12"
+                cy="12"
+                r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            <div>
+              <dt>Disponibilité</dt>
+              <dd>{{ hero.badge || 'Urgences 7j/7' }}</dd>
+            </div>
+          </div>
+        </dl>
+
         <div
-          v-if="contact.email"
-          class="contact-metarow">
-          <svg
-            viewBox="0 0 24 24"
-            class="ico"
-            aria-hidden="true">
-            <rect
-              x="3"
-              y="5"
-              width="18"
-              height="14"
-              rx="2" />
-            <path d="m3 7 9 6 9-6" />
-          </svg>
-          <div>
-            <dt>Email</dt>
-            <dd>{{ contact.email }}</dd>
-          </div>
+          v-if="openingHoursItems.length"
+          class="contact-hours">
+          <p class="contact-hours-label">Horaires</p>
+          <ul class="contact-hours-list">
+            <li
+              v-for="(slot, i) in openingHoursItems"
+              :key="i"
+              class="contact-hours-row">
+              <span class="contact-hours-day">{{ slot.day }}</span>
+              <span class="contact-hours-time">{{ slot.hours }}</span>
+            </li>
+          </ul>
         </div>
-        <div
-          v-if="city"
-          class="contact-metarow">
-          <svg
-            viewBox="0 0 24 24"
-            class="ico"
-            aria-hidden="true">
-            <path d="M12 21s7-5.5 7-11a7 7 0 0 0-14 0c0 5.5 7 11 7 11Z" />
-            <circle
-              cx="12"
-              cy="10"
-              r="2.5" />
-          </svg>
-          <div>
-            <dt>Zone d'intervention</dt>
-            <dd>{{ city }}</dd>
-          </div>
-        </div>
-        <div class="contact-metarow">
-          <svg
-            viewBox="0 0 24 24"
-            class="ico"
-            aria-hidden="true">
-            <circle
-              cx="12"
-              cy="12"
-              r="9" />
-            <path d="M12 7v5l3 2" />
-          </svg>
-          <div>
-            <dt>Disponibilité</dt>
-            <dd>{{ hero.badge || 'Urgences 7j/7' }}</dd>
-          </div>
-        </div>
-      </dl>
+      </div>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { ContactBlock, HeroBlock } from '~/types/plumber-atelier'
 
-defineProps<{
+const props = defineProps<{
   contact: ContactBlock
   hero: HeroBlock
   phone: string
   city: string
 }>()
+
+const openingHoursItems: ComputedRef<Array<{ day?: string; hours?: string }>> = computed(
+  (): Array<{ day?: string; hours?: string }> =>
+    Array.isArray(props.contact.openingHours) ? props.contact.openingHours : [],
+)
 </script>
 
 <style scoped>
@@ -179,6 +203,42 @@ defineProps<{
 .contact-metarow dd {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+.contact-hours {
+  margin-top: 2rem;
+}
+.contact-hours-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--paper) 60%, transparent);
+  margin-bottom: 0.4rem;
+}
+.contact-hours-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.contact-hours-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+.contact-hours-row:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+.contact-hours-day {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+.contact-hours-time {
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 /* ════════════ Responsive ════════════ */

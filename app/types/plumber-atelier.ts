@@ -25,6 +25,7 @@ export interface HeroBlock {
   phone?: string
   cta_label?: string
   badge?: string
+  image?: string
 }
 
 export interface TrustBlock {
@@ -45,6 +46,34 @@ export interface WhyUsBlock {
   items?: Array<{ label?: string }>
 }
 
+export interface AboutBlock {
+  component?: string
+  heading?: string
+  text?: string
+  image?: string
+}
+
+export interface GalleryBlock {
+  component?: string
+  heading?: string
+  subheading?: string
+  items?: Array<{ url?: string; alt?: string }>
+}
+
+export interface ReviewsBlock {
+  component?: string
+  heading?: string
+  subheading?: string
+  items?: Array<{ author?: string; rating?: number; text?: string }>
+}
+
+export interface FaqBlock {
+  component?: string
+  heading?: string
+  subheading?: string
+  items?: Array<{ question?: string; answer?: string }>
+}
+
 export interface ContactBlock {
   component?: string
   heading?: string
@@ -52,6 +81,7 @@ export interface ContactBlock {
   email?: string
   phone?: string
   city?: string
+  openingHours?: Array<{ day?: string; hours?: string }>
 }
 
 /** Contenu complet de la page, prêt à être rendu par les sections. */
@@ -63,7 +93,11 @@ export interface PlumberAtelierPageContent {
   hero: HeroBlock
   trustItems: Array<{ value: string; label: string }>
   services: ServicesBlock
+  about: AboutBlock
   whyUs: WhyUsBlock
+  gallery: GalleryBlock
+  reviews: ReviewsBlock
+  faq: FaqBlock
   contact: ContactBlock
 }
 
@@ -134,6 +168,17 @@ const atelierDefaults = {
     { label: 'Des prix transparents, annoncés avant de commencer' },
   ] as Array<{ label: string }>,
 
+  aboutHeading: "L'artisan derrière l'atelier",
+
+  galleryHeading: 'Le travail, en images',
+  gallerySubheading: 'Quelques chantiers récents — livrés propres, finis, garantis.',
+
+  reviewsHeading: 'Le travail parle, les clients aussi',
+  reviewsSubheading: 'Des retours de chantiers réels, sans tri ni retouche.',
+
+  faqHeading: "Les questions qu'on nous pose",
+  faqSubheading: "Et les réponses franches qu'on vous donne avant d'intervenir.",
+
   contactHeading: 'Un problème de plomberie ?',
   contactSubheading: 'Réponse sous 2h · Devis gratuit · Intervention rapide',
 } as const
@@ -141,11 +186,13 @@ const atelierDefaults = {
 /**
  * Construit le contenu de page entièrement typé à partir d'un `SiteContent`.
  *
- * Les champs VARIABLES (nom, téléphone, ville, sous-titre, services, email) proviennent de
- * `content` ; les champs BOILERPLATE (badge hero, repères de confiance, garanties de
- * l'artisan, titres de sections, services par défaut) proviennent des défauts de la
- * template. Les services sont repris de `content` s'ils existent, sinon remplacés par les
- * services éditoriaux par défaut afin que la section reste complète.
+ * Les champs VARIABLES (nom, téléphone, ville, sous-titre, à-propos, images, galerie, avis,
+ * FAQ, horaires, services, email) proviennent de `content` ; les champs BOILERPLATE (badge
+ * hero, repères de confiance, garanties de l'artisan, titres de sections, services par
+ * défaut) proviennent des défauts de la template. Les services sont repris de `content`
+ * s'ils existent, sinon remplacés par les services éditoriaux par défaut afin que la
+ * section reste complète. Les sections adossées à du contenu prospect (à-propos, galerie,
+ * avis, FAQ, horaires) restent VIDES quand la clé est absente — la racine les masque.
  * @param content - Données variables du prospect.
  * @returns Le contenu typé prêt pour le rendu par les sections.
  */
@@ -164,6 +211,49 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
           icon: service.icon,
         }))
       : atelierDefaults.servicesItems
+
+  const galleryItems: Array<{ url: string; alt: string }> = Array.isArray(content.gallery)
+    ? content.gallery
+        .filter((image): boolean => typeof image.url === 'string' && image.url.length > 0)
+        .map((image): { url: string; alt: string } => ({
+          url: image.url ?? '',
+          alt: image.alt ?? '',
+        }))
+    : []
+
+  const reviewItems: Array<{ author: string; rating: number; text: string }> = Array.isArray(
+    content.reviews,
+  )
+    ? content.reviews
+        .filter((review): boolean => typeof review.text === 'string' && review.text.length > 0)
+        .map((review): { author: string; rating: number; text: string } => ({
+          author: review.author ?? '',
+          rating: typeof review.rating === 'number' ? review.rating : 0,
+          text: review.text ?? '',
+        }))
+    : []
+
+  const faqItems: Array<{ question: string; answer: string }> = Array.isArray(content.faq)
+    ? content.faq
+        .filter((item): boolean => typeof item.question === 'string' && item.question.length > 0)
+        .map((item): { question: string; answer: string } => ({
+          question: item.question ?? '',
+          answer: item.answer ?? '',
+        }))
+    : []
+
+  const openingHours: Array<{ day: string; hours: string }> = Array.isArray(content.openingHours)
+    ? content.openingHours
+        .filter(
+          (slot): boolean =>
+            (typeof slot.day === 'string' && slot.day.length > 0) ||
+            (typeof slot.hours === 'string' && slot.hours.length > 0),
+        )
+        .map((slot): { day: string; hours: string } => ({
+          day: slot.day ?? '',
+          hours: slot.hours ?? '',
+        }))
+    : []
 
   return {
     theme: {
@@ -192,6 +282,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
           : atelierDefaults.heroSubtitle,
       phone,
       cta_label: atelierDefaults.heroCtaLabel,
+      image: content.heroImage ?? '',
     },
     trustItems: atelierDefaults.trustItems,
     services: {
@@ -199,9 +290,29 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
       subheading: atelierDefaults.servicesSubheading,
       items: services,
     },
+    about: {
+      heading: atelierDefaults.aboutHeading,
+      text: content.about ?? '',
+      image: content.aboutImage ?? '',
+    },
     whyUs: {
       heading: atelierDefaults.whyUsHeading,
       items: atelierDefaults.whyUsItems,
+    },
+    gallery: {
+      heading: atelierDefaults.galleryHeading,
+      subheading: atelierDefaults.gallerySubheading,
+      items: galleryItems,
+    },
+    reviews: {
+      heading: atelierDefaults.reviewsHeading,
+      subheading: atelierDefaults.reviewsSubheading,
+      items: reviewItems,
+    },
+    faq: {
+      heading: atelierDefaults.faqHeading,
+      subheading: atelierDefaults.faqSubheading,
+      items: faqItems,
     },
     contact: {
       heading: atelierDefaults.contactHeading,
@@ -209,6 +320,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
       email: content.email ?? '',
       phone,
       city,
+      openingHours,
     },
   }
 }

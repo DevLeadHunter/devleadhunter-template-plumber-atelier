@@ -42,11 +42,33 @@
       <!-- ════ Services — index numéroté ════ -->
       <ServicesSection :services="services" />
 
+      <!-- ════ À propos — les mots du prospect (masquée sans `about`) ════ -->
+      <AboutSection
+        v-if="hasAboutText"
+        :about="about"
+        :business-name="businessName"
+        :city="city" />
+
       <!-- ════ L'artisan — split éditorial + garanties ════ -->
       <ArtisanSection
         v-if="whyItems.length"
         :why-us="whyUs"
         :city="city" />
+
+      <!-- ════ Galerie — planches numérotées (masquée sans `gallery`) ════ -->
+      <GallerySection
+        v-if="galleryItems.length"
+        :gallery="gallery" />
+
+      <!-- ════ Avis — registre de citations (masquée sans `reviews`) ════ -->
+      <ReviewsSection
+        v-if="reviewItems.length"
+        :reviews="reviews" />
+
+      <!-- ════ FAQ — accordéon hairline (masquée sans `faq`) ════ -->
+      <FaqSection
+        v-if="faqItems.length"
+        :faq="faq" />
 
       <!-- ════ Contact — l'unique moment sombre, dramatique ════ -->
       <ContactSection
@@ -60,7 +82,6 @@
       <span
         >© {{ year }} {{ businessName }}<template v-if="city"> · {{ city }}</template></span
       >
-      <span class="foot-credit">Propulsé par DevLeadHunter</span>
     </footer>
   </div>
 </template>
@@ -69,9 +90,10 @@
 /**
  * Template 'plumber-atelier' (« Plombier Atelier ») — direction artistique « Atelier ».
  * Vitrine papier laiton/encre, typo display serif (Fraunces) + sans technique (Archivo),
- * fiche d'intervention, index de services numéroté, règle graduée, section contact sombre.
- * Animations : reveals doux au scroll via IntersectionObserver, désactivés quand
- * l'utilisateur réduit les animations.
+ * fiche d'intervention, index de services numéroté, règle graduée, à-propos éditorial,
+ * galerie en planches numérotées, registre d'avis, FAQ accordéon, horaires dans la
+ * section contact sombre. Animations : reveals doux au scroll via IntersectionObserver,
+ * désactivés quand l'utilisateur réduit les animations.
  *
  * Racine publique de la template : elle rend un `SiteContent` typé et POSSÈDE sa copie
  * éditoriale (via `buildPlumberAtelierContent`). Aucune dépendance à demo-host.
@@ -80,12 +102,20 @@ import type { ComputedRef, PropType, Ref } from 'vue'
 import HeroSection from './sections/HeroSection.vue'
 import TrustSection from './sections/TrustSection.vue'
 import ServicesSection from './sections/ServicesSection.vue'
+import AboutSection from './sections/AboutSection.vue'
 import ArtisanSection from './sections/ArtisanSection.vue'
+import GallerySection from './sections/GallerySection.vue'
+import ReviewsSection from './sections/ReviewsSection.vue'
+import FaqSection from './sections/FaqSection.vue'
 import ContactSection from './sections/ContactSection.vue'
 import type {
+  AboutBlock,
   ContactBlock,
+  FaqBlock,
+  GalleryBlock,
   HeroBlock,
   PlumberAtelierPageContent,
+  ReviewsBlock,
   ServicesBlock,
   WhyUsBlock,
 } from '~/types/plumber-atelier'
@@ -112,7 +142,11 @@ const phone: ComputedRef<string> = computed((): string => parsed.value.phone)
 const city: ComputedRef<string> = computed((): string => parsed.value.city)
 const hero: ComputedRef<HeroBlock> = computed((): HeroBlock => parsed.value.hero)
 const services: ComputedRef<ServicesBlock> = computed((): ServicesBlock => parsed.value.services)
+const about: ComputedRef<AboutBlock> = computed((): AboutBlock => parsed.value.about)
 const whyUs: ComputedRef<WhyUsBlock> = computed((): WhyUsBlock => parsed.value.whyUs)
+const gallery: ComputedRef<GalleryBlock> = computed((): GalleryBlock => parsed.value.gallery)
+const reviews: ComputedRef<ReviewsBlock> = computed((): ReviewsBlock => parsed.value.reviews)
+const faq: ComputedRef<FaqBlock> = computed((): FaqBlock => parsed.value.faq)
 const contact: ComputedRef<ContactBlock> = computed((): ContactBlock => parsed.value.contact)
 
 const trustItems: ComputedRef<Array<{ value: string; label: string }>> = computed(
@@ -120,6 +154,20 @@ const trustItems: ComputedRef<Array<{ value: string; label: string }>> = compute
 )
 const whyItems: ComputedRef<Array<{ label?: string }>> = computed(
   (): Array<{ label?: string }> => parsed.value.whyUs.items ?? [],
+)
+const hasAboutText: ComputedRef<boolean> = computed(
+  (): boolean => (parsed.value.about.text ?? '').length > 0,
+)
+const galleryItems: ComputedRef<Array<{ url?: string; alt?: string }>> = computed(
+  (): Array<{ url?: string; alt?: string }> => parsed.value.gallery.items ?? [],
+)
+const reviewItems: ComputedRef<Array<{ author?: string; rating?: number; text?: string }>> =
+  computed(
+    (): Array<{ author?: string; rating?: number; text?: string }> =>
+      parsed.value.reviews.items ?? [],
+  )
+const faqItems: ComputedRef<Array<{ question?: string; answer?: string }>> = computed(
+  (): Array<{ question?: string; answer?: string }> => parsed.value.faq.items ?? [],
 )
 
 const cssVars: ComputedRef<Record<string, string>> = computed((): Record<string, string> => ({
@@ -349,9 +397,6 @@ useHead({
   flex-wrap: wrap;
   font-size: 0.78rem;
   color: var(--ink-soft);
-}
-.foot-credit {
-  letter-spacing: 0.04em;
 }
 
 /* ════════════ Reveals ════════════ */

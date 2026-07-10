@@ -5,10 +5,9 @@ import type { SiteContent } from './app/types/SiteContent'
  * Not shipped to production — edit it freely while designing your template.
  *
  * A realistic, fully-filled French plumber example: every SiteContent key is populated so
- * the whole page renders. Note that 'plumber-atelier' is a lean template — it surfaces
- * businessName, phone, email, city, subtitle, palette and services; the remaining keys
- * (about, images, gallery, reviews, faq, zones, openingHours) are provided here for
- * completeness but are not part of this template's art direction.
+ * the whole page renders. 'plumber-atelier' surfaces businessName, phone, email, city,
+ * subtitle, about, heroImage, aboutImage, gallery, reviews, faq, openingHours, palette
+ * and services; only `zones` and `area` are not part of this template's art direction.
  */
 export const mockSiteContent: SiteContent = {
   businessName: 'Plomberie Vasseur',
