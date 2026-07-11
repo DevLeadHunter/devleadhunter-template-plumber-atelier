@@ -134,4 +134,8 @@ export const mockSiteContent: SiteContent = {
     { day: 'Samedi', hours: '9h–12h' },
     { day: 'Dimanche', hours: 'Urgences uniquement' },
   ],
+  social: [
+    { network: 'facebook', url: 'https://facebook.com/plomberie-vasseur' },
+    { network: 'instagram', url: 'https://instagram.com/plomberie-vasseur' },
+  ],
 }

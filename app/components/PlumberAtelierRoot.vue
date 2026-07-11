@@ -82,6 +82,31 @@
       <span
         >© {{ year }} {{ businessName }}<template v-if="city"> · {{ city }}</template></span
       >
+
+      <!-- ════ Réseaux sociaux — pastilles hairline (masquées sans lien) ════ -->
+      <ul
+        v-if="social.length"
+        class="foot-social">
+        <li
+          v-for="link in social"
+          :key="link.network">
+          <a
+            :href="link.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            :title="link.label"
+            :aria-label="link.label"
+            class="foot-social-link">
+            <span>{{ link.label }}</span>
+            <svg
+              viewBox="0 0 24 24"
+              class="foot-social-arrow"
+              aria-hidden="true">
+              <path d="M7 17 17 7M8 7h9v9" />
+            </svg>
+          </a>
+        </li>
+      </ul>
     </footer>
   </div>
 </template>
@@ -117,6 +142,7 @@ import type {
   PlumberAtelierPageContent,
   ReviewsBlock,
   ServicesBlock,
+  SocialLink,
   WhyUsBlock,
 } from '~/types/plumber-atelier'
 import { buildPlumberAtelierContent } from '~/types/plumber-atelier'
@@ -148,6 +174,7 @@ const gallery: ComputedRef<GalleryBlock> = computed((): GalleryBlock => parsed.v
 const reviews: ComputedRef<ReviewsBlock> = computed((): ReviewsBlock => parsed.value.reviews)
 const faq: ComputedRef<FaqBlock> = computed((): FaqBlock => parsed.value.faq)
 const contact: ComputedRef<ContactBlock> = computed((): ContactBlock => parsed.value.contact)
+const social: ComputedRef<SocialLink[]> = computed((): SocialLink[] => parsed.value.social)
 
 const trustItems: ComputedRef<Array<{ value: string; label: string }>> = computed(
   (): Array<{ value: string; label: string }> => parsed.value.trustItems,
@@ -393,10 +420,46 @@ useHead({
   padding: 1.6rem 1.5rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
   font-size: 0.78rem;
   color: var(--ink-soft);
+}
+.foot-social {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.foot-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  border: 1px solid var(--hair);
+  padding: 0.4rem 0.85rem;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+.foot-social-link:hover {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.foot-social-arrow {
+  width: 0.62rem;
+  height: 0.62rem;
+  stroke-width: 2;
 }
 
 /* ════════════ Reveals ════════════ */
