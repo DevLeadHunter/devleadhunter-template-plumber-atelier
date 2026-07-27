@@ -16,10 +16,10 @@
  * (Fraunces + Archivo, loaded via <useHead> in the root) and the brand colors.
  */
 @theme {
-  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-atelier-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-atelier-display: 'Fraunces', ui-serif, Georgia, serif;
 
-  --color-brass: #b8732e;
-  --color-ink: #1c1b19;
-  --color-steel: #2e5b6b;
+  --color-atelier-brass: #b8732e;
+  --color-atelier-ink: #1c1b19;
+  --color-atelier-steel: #2e5b6b;
 }
