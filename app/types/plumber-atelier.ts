@@ -192,6 +192,38 @@ const atelierDefaults = {
 
   contactHeading: 'Un problème de plomberie ?',
   contactSubheading: 'Réponse sous 2h · Devis gratuit · Intervention rapide',
+
+  images: {
+    hero: 'https://images.unsplash.com/photo-1676210134188-4c05dd172f89?auto=format&fit=crop&w=1400&q=80',
+    about:
+      'https://images.unsplash.com/photo-1676210134190-3f2c0d5cf58d?auto=format&fit=crop&w=1200&q=80',
+    gallery: [
+      {
+        url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80',
+        alt: 'Rénovation complète de salle de bain',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1682888818696-906287d759f5?auto=format&fit=crop&w=1200&q=80',
+        alt: 'Meuble vasque et robinetterie',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1744869524920-f0efc925b82f?auto=format&fit=crop&w=1200&q=80',
+        alt: 'Douche et baignoire',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1564540579594-0930edb6de43?auto=format&fit=crop&w=1200&q=80',
+        alt: 'Salle de bain élégante',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1600488999585-e4364713b90a?auto=format&fit=crop&w=1200&q=80',
+        alt: 'Double vasque et miroirs',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1638799869566-b17fa794c4de?auto=format&fit=crop&w=1200&q=80',
+        alt: 'Douche à l’italienne',
+      },
+    ] as Array<{ url: string; alt: string }>,
+  },
 } as const
 
 /**
@@ -274,6 +306,9 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
           alt: image.alt ?? '',
         }))
     : []
+  const resolvedGalleryItems: Array<{ url: string; alt: string }> = galleryItems.length
+    ? galleryItems
+    : atelierDefaults.images.gallery.map((item): { url: string; alt: string } => ({ ...item }))
 
   const reviewItems: Array<{ author: string; rating: number; text: string }> = Array.isArray(
     content.reviews,
@@ -350,7 +385,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
           : atelierDefaults.heroSubtitle,
       phone,
       cta_label: resolveEditorialText(content.ctaCallLabel, atelierDefaults.heroCtaLabel),
-      image: content.heroImage ?? '',
+      image: content.heroImage || atelierDefaults.images.hero,
     },
     trustItems,
     services: {
@@ -361,7 +396,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
     about: {
       heading: resolveEditorialText(content.aboutHeading, atelierDefaults.aboutHeading),
       text: content.about ?? '',
-      image: content.aboutImage ?? '',
+      image: content.aboutImage || atelierDefaults.images.about,
     },
     whyUs: {
       heading: atelierDefaults.whyUsHeading,
@@ -370,7 +405,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
     gallery: {
       heading: resolveEditorialText(content.galleryHeading, atelierDefaults.galleryHeading),
       subheading: atelierDefaults.gallerySubheading,
-      items: galleryItems,
+      items: resolvedGalleryItems,
     },
     reviews: {
       heading: resolveEditorialText(content.reviewsHeading, atelierDefaults.reviewsHeading),

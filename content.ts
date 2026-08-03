@@ -22,8 +22,10 @@ export const mockSiteContent: SiteContent = {
   servicesHeading: 'Nos savoir-faire',
   about:
     "Artisan plombier installé à Nantes depuis plus de quinze ans, je prends en charge vos dépannages, installations et rénovations avec le même soin. Quand vous appelez, vous parlez directement à l'artisan qui viendra chez vous — pas à un standard. Diagnostic honnête, matériel de qualité et chantier laissé propre : c'est ma manière de travailler.",
-  heroImage: 'https://picsum.photos/seed/atelier-hero/800/600',
-  aboutImage: 'https://picsum.photos/seed/atelier-about/800/600',
+  heroImage:
+    'https://images.unsplash.com/photo-1676210134188-4c05dd172f89?auto=format&fit=crop&w=1400&q=80',
+  aboutImage:
+    'https://images.unsplash.com/photo-1676210134190-3f2c0d5cf58d?auto=format&fit=crop&w=1200&q=80',
   palette: {
     primary: '#B8732E',
     secondary: '#1C1B19',
@@ -66,14 +68,29 @@ export const mockSiteContent: SiteContent = {
   ],
   gallery: [
     {
-      url: 'https://picsum.photos/seed/atelier1/800/600',
+      url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80',
       alt: 'Rénovation complète de salle de bain',
     },
-    { url: 'https://picsum.photos/seed/atelier2/800/600', alt: 'Installation de chauffe-eau' },
-    { url: 'https://picsum.photos/seed/atelier3/800/600', alt: 'Pose de robinetterie de cuisine' },
-    { url: 'https://picsum.photos/seed/atelier4/800/600', alt: 'Réseau de cuivre soigné' },
-    { url: 'https://picsum.photos/seed/atelier5/800/600', alt: "Douche à l'italienne" },
-    { url: 'https://picsum.photos/seed/atelier6/800/600', alt: "Remplacement de colonne d'eau" },
+    {
+      url: 'https://images.unsplash.com/photo-1682888818696-906287d759f5?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Meuble vasque et robinetterie',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1744869524920-f0efc925b82f?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Douche et baignoire',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1564540579594-0930edb6de43?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Réseau de cuivre soigné',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1600488999585-e4364713b90a?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Double vasque et miroirs',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1638799869566-b17fa794c4de?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Douche à l’italienne',
+    },
   ],
   reviews: [
     {
