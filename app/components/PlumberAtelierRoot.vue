@@ -29,6 +29,7 @@
     <main>
       <!-- ════ Hero — asymétrique 7/5 ════ -->
       <HeroSection
+        v-bind="editableAttrs(props.content._editable?.hero)"
         :hero="hero"
         :business-name="businessName"
         :phone="phone"
@@ -37,14 +38,18 @@
       <!-- ════ Bandeau confiance — registre, pas des cards ════ -->
       <TrustSection
         v-if="trustItems.length"
+        v-bind="editableAttrs(props.content._editable?.trust)"
         :items="trustItems" />
 
       <!-- ════ Services — index numéroté ════ -->
-      <ServicesSection :services="services" />
+      <ServicesSection
+        v-bind="editableAttrs(props.content._editable?.services)"
+        :services="services" />
 
       <!-- ════ À propos — les mots du prospect (masquée sans `about`) ════ -->
       <AboutSection
         v-if="hasAboutText"
+        v-bind="editableAttrs(props.content._editable?.about)"
         :about="about"
         :business-name="businessName"
         :city="city" />
@@ -58,20 +63,24 @@
       <!-- ════ Galerie — planches numérotées (masquée sans `gallery`) ════ -->
       <GallerySection
         v-if="galleryItems.length"
+        v-bind="editableAttrs(props.content._editable?.gallery)"
         :gallery="gallery" />
 
       <!-- ════ Avis — registre de citations (masquée sans `reviews`) ════ -->
       <ReviewsSection
         v-if="reviewItems.length"
+        v-bind="editableAttrs(props.content._editable?.reviews)"
         :reviews="reviews" />
 
       <!-- ════ FAQ — accordéon hairline (masquée sans `faq`) ════ -->
       <FaqSection
         v-if="faqItems.length"
+        v-bind="editableAttrs(props.content._editable?.faq)"
         :faq="faq" />
 
       <!-- ════ Contact — l'unique moment sombre, dramatique ════ -->
       <ContactSection
+        v-bind="editableAttrs(props.content._editable?.contact)"
         :contact="contact"
         :hero="hero"
         :phone="phone"
@@ -147,6 +156,7 @@ import type {
 } from '~/types/plumber-atelier'
 import { buildPlumberAtelierContent } from '~/types/plumber-atelier'
 import type { SiteContent } from '~/types/SiteContent'
+import { editableAttrs } from '@devleadhunter/website-content'
 
 /**
  * Racine de la template — l'unique point d'entrée public rendu par demo-host.
