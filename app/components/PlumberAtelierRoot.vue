@@ -6,7 +6,14 @@
     <!-- ════ Top bar — fine, éditoriale ════ -->
     <header class="topbar">
       <div class="topbar-inner">
-        <span class="wordmark">{{ businessName }}</span>
+        <span class="topbar-brand">
+          <img
+            v-if="logo"
+            :src="logo"
+            alt=""
+            class="topbar-logo" />
+          <span class="wordmark">{{ businessName }}</span>
+        </span>
         <span class="topbar-tag"
           >Artisan plombier<template v-if="city"> · {{ city }}</template></span
         >
@@ -174,6 +181,7 @@ const parsed: ComputedRef<PlumberAtelierPageContent> = computed((): PlumberAteli
 )
 
 const businessName: ComputedRef<string> = computed((): string => parsed.value.businessName)
+const logo: ComputedRef<string> = computed((): string => parsed.value.logo)
 const phone: ComputedRef<string> = computed((): string => parsed.value.phone)
 const city: ComputedRef<string> = computed((): string => parsed.value.city)
 const hero: ComputedRef<HeroBlock> = computed((): HeroBlock => parsed.value.hero)
@@ -354,6 +362,17 @@ useHead({
   display: flex;
   align-items: center;
   gap: 1.2rem;
+}
+.topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.topbar-logo {
+  height: 1.9rem;
+  width: auto;
+  max-width: 7rem;
+  object-fit: contain;
 }
 .wordmark {
   font-family: 'Fraunces', serif;

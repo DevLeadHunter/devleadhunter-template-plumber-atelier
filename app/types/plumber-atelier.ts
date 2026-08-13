@@ -98,6 +98,7 @@ export interface SocialLink {
 export interface PlumberAtelierPageContent {
   theme: Theme
   businessName: string
+  logo: string
   phone: string
   city: string
   hero: HeroBlock
@@ -286,6 +287,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
   const palette = content.palette ?? {}
 
   const businessName: string = content.businessName ?? ''
+  const logo: string = typeof content.logo === 'string' ? content.logo.trim() : ''
   const phone: string = content.phone ?? ''
   const city: string = content.city ?? ''
 
@@ -374,6 +376,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
           : defaultTheme.accent,
     },
     businessName,
+    logo,
     phone,
     city,
     hero: {
