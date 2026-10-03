@@ -46,7 +46,8 @@
       <TrustSection
         v-if="trustItems.length"
         v-bind="editableAttrs(props.content._editable?.trust)"
-        :items="trustItems" />
+        :items="trustItems"
+        :professional-license="professionalLicense" />
 
       <!-- ════ Services — index numéroté ════ -->
       <ServicesSection
@@ -96,7 +97,8 @@
 
     <footer class="foot">
       <span
-        >© {{ year }} {{ businessName }}<template v-if="city"> · {{ city }}</template></span
+        >© {{ year }} {{ businessName }}<template v-if="city"> · {{ city }}</template
+        ><template v-if="professionalLicense"> · {{ professionalLicense }}</template></span
       >
 
       <!-- ════ Réseaux sociaux — pastilles hairline (masquées sans lien) ════ -->
@@ -184,6 +186,9 @@ const businessName: ComputedRef<string> = computed((): string => parsed.value.bu
 const logo: ComputedRef<string> = computed((): string => parsed.value.logo)
 const phone: ComputedRef<string> = computed((): string => parsed.value.phone)
 const city: ComputedRef<string> = computed((): string => parsed.value.city)
+const professionalLicense: ComputedRef<string> = computed(
+  (): string => parsed.value.professionalLicense,
+)
 const hero: ComputedRef<HeroBlock> = computed((): HeroBlock => parsed.value.hero)
 const services: ComputedRef<ServicesBlock> = computed((): ServicesBlock => parsed.value.services)
 const about: ComputedRef<AboutBlock> = computed((): AboutBlock => parsed.value.about)

@@ -12,6 +12,7 @@
  * sections attendent.
  */
 import type { SiteContent } from '~/types/SiteContent'
+import { professionalLicenseLine } from '@devleadhunter/website-content'
 
 export type Theme = { primary: string; secondary: string; accent: string }
 
@@ -24,6 +25,7 @@ export interface HeroBlock {
   subtitle?: string
   phone?: string
   cta_label?: string
+  ctaQuoteLabel?: string
   badge?: string
   image?: string
 }
@@ -101,6 +103,7 @@ export interface PlumberAtelierPageContent {
   logo: string
   phone: string
   city: string
+  professionalLicense: string
   hero: HeroBlock
   trustItems: Array<{ value: string; label: string }>
   services: ServicesBlock
@@ -124,12 +127,13 @@ const atelierDefaults = {
   heroSubtitle:
     'Dépannage, installation et rénovation — un artisan de confiance, pas un standard téléphonique.',
   heroCtaLabel: 'Appeler',
+  heroCtaQuoteLabel: 'Devis gratuit',
 
   trustItems: [
     { value: '7j/7', label: 'Dépannage & urgences' },
     { value: 'Sous 2h', label: 'Réponse au devis' },
-    { value: '0 €', label: 'Devis sans engagement' },
-    { value: '10 ans', label: 'Travaux garantis' },
+    { value: 'Gratuit', label: 'Devis sans engagement' },
+    { value: 'Assurés', label: 'Travaux garantis' },
   ] as Array<{ value: string; label: string }>,
 
   servicesHeading: 'Ce que nous réparons',
@@ -175,7 +179,7 @@ const atelierDefaults = {
   whyUsItems: [
     { label: 'Un interlocuteur unique, du devis à la fin du chantier' },
     { label: 'Devis gratuit et détaillé, sans engagement' },
-    { label: 'Travaux couverts par la garantie décennale' },
+    { label: 'Travaux garantis et couverts par notre assurance professionnelle' },
     { label: 'Chantier laissé propre après chaque intervention' },
     { label: 'Des prix transparents, annoncés avant de commencer' },
   ] as Array<{ label: string }>,
@@ -290,6 +294,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
   const logo: string = typeof content.logo === 'string' ? content.logo.trim() : ''
   const phone: string = content.phone ?? ''
   const city: string = content.city ?? ''
+  const professionalLicense: string = professionalLicenseLine(content)
 
   const services: Array<{ label: string; description: string; icon?: string }> =
     Array.isArray(content.services) && content.services.length > 0
@@ -379,6 +384,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
     logo,
     phone,
     city,
+    professionalLicense,
     hero: {
       badge: resolveEditorialText(content.heroBadge, atelierDefaults.heroBadge),
       title: businessName,
@@ -388,6 +394,7 @@ export function buildPlumberAtelierContent(content: SiteContent): PlumberAtelier
           : atelierDefaults.heroSubtitle,
       phone,
       cta_label: resolveEditorialText(content.ctaCallLabel, atelierDefaults.heroCtaLabel),
+      ctaQuoteLabel: resolveEditorialText(content.ctaQuoteLabel, atelierDefaults.heroCtaQuoteLabel),
       image: content.heroImage || atelierDefaults.images.hero,
     },
     trustItems,

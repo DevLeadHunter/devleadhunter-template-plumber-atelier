@@ -9,12 +9,18 @@
       <span class="ledger-value">{{ item.value }}</span>
       <span class="ledger-label">{{ item.label }}</span>
     </div>
+    <p
+      v-if="professionalLicense"
+      class="ledger-license">
+      {{ professionalLicense }}
+    </p>
   </section>
 </template>
 
 <script lang="ts" setup>
 defineProps<{
   items: Array<{ value?: string; label?: string }>
+  professionalLicense?: string
 }>()
 </script>
 
@@ -49,6 +55,16 @@ defineProps<{
 }
 .ledger-label {
   font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+.ledger-license {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0.8rem 1.4rem;
+  border-top: 1px solid var(--hair);
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-soft);

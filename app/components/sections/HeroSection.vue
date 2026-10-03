@@ -44,7 +44,7 @@
           <a
             href="#contact"
             class="btn btn-ink"
-            >Devis gratuit</a
+            >{{ hero.ctaQuoteLabel || 'Devis gratuit' }}</a
           >
         </div>
         <!-- règle technique graduée -->
